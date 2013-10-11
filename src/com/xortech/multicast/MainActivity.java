@@ -28,10 +28,11 @@ public class MainActivity extends Activity {
 	private static MulticastSocket mSocket;
 	InetAddress broadcastAddr = null;
 	
-	// Cursor on Target (CoT) String for testing
+	/* 
+	** Cursor on Target (CoT) String for testing
+	*/
 	String testString = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><event version='2.0' uid='GeoChat.th36r1m.All Chat Rooms.2' type='b-t-f' time='2013-04-03T22:33:55.407Z' start='2013-04-03T22:33:55.407Z' stale='2013-04-04T22:33:55.407Z' how='h-g-i-g-o'><point lat='0.0' lon='0.0' hae='0.0' ce='99999999' le='99999999' /><detail><__chat chatroom='All Chat Rooms'/><link uid='ANDROID-24:98:7C:1C:1C:31' type='a-f-G-U-C' relation='p-p'/><remarks source='BAO.F.ATAK1.Spoofed_Sender' time='2013-04-03T22:33:55.407Z'>{0}</remarks><__serverdestination destinations='udp:224.10.10.1:17012'/></detail></event>";
 	
-	// Have a text field and button for user input
 	EditText et;
 	Button bt;
 	
@@ -45,7 +46,8 @@ public class MainActivity extends Activity {
 		
 		WifiManager wifi = (WifiManager)getSystemService(Context.WIFI_SERVICE);
 		
-		/* Bug: WifiManager.MulticastLock state will reset on screen rotation
+		/* 
+		** Bug: WifiManager.MulticastLock state will reset on screen rotation
 		** To fix this issue, adjust manifest to handle the event
 		*/
 		if(wifi != null) {
@@ -54,24 +56,24 @@ public class MainActivity extends Activity {
 		    Toast.makeText(getApplicationContext(), "Lock Acquired", Toast.LENGTH_LONG).show();
 		}
 		
-		// Required for most Android handsets - optionally set up developer options on Android device
+		/*
+		** Required for most Android handsets - optionally set up developer options on Android device
+		*/
 		ThreadPolicy tp = ThreadPolicy.LAX;
 		StrictMode.setThreadPolicy(tp);
 		
 	    bt.setOnClickListener(new View.OnClickListener() {
 	    	
 	            public void onClick(View v) {
-	            	
-	        		try {
-	        			broadcastAddr = InetAddress.getByName(BROADCAST_ADDR);
-	        		} catch (UnknownHostException e1) {
-	        			// TODO Auto-generated catch block
-	        			e1.printStackTrace();
-	        		}
+	            	try {
+	        		broadcastAddr = InetAddress.getByName(BROADCAST_ADDR);
+	        	} 
+	        	catch (UnknownHostException e1) {
+	        		e1.printStackTrace();
+	        	}
 	        		
-	        	    try {
-	        	    	
-	        	    	broadcastAddr = InetAddress.getByName(BROADCAST_ADDR);
+	        	try {
+	        		broadcastAddr = InetAddress.getByName(BROADCAST_ADDR);
 	        	    	System.out.println(broadcastAddr);
 	        	    	
 	        	    	mSocket = new MulticastSocket(BROADCAST_PORT);
@@ -79,11 +81,13 @@ public class MainActivity extends Activity {
 	        	    	
 	        	    	mSocket.joinGroup(broadcastAddr);
 	        	    	
-	        	    	/* If you want to transmit user input, then uncomment message
+	        	    	/* 
+	        	    	** If you want to transmit user input, then uncomment message
 	        	    	** and replace testString variable with messsage. As it stands
 	        	    	** when the button is pressed, the test CoT message will be sent
 	        	    	** over multicast.
 	        	    	*/
+	        	    	
 	        	    	// String message = et.getText().toString();
 	        	    	byte[] tMessage = new byte[65535];
 	        	    	tMessage = testString.getBytes();
@@ -91,30 +95,31 @@ public class MainActivity extends Activity {
 	        	    	
 	        	    	DatagramPacket dPacket = new DatagramPacket(tMessage, tMessage.length,broadcastAddr,BROADCAST_PORT);
 	        	    	System.out.println(dPacket);
+	        	    	
 	        	    	try {
-	        				mSocket.send(dPacket);
-	        				Toast.makeText(getApplicationContext(), "Sent", Toast.LENGTH_LONG).show();
-	        				
-	        				// socket sent
-	        			} catch (IOException e) {
-	        				// TODO Auto-generated catch block
-	        				e.printStackTrace();
-	        			}
-
-	        	    } catch (UnknownHostException e1) {
-	        			// TODO Auto-generated catch block
-	        			e1.printStackTrace();
-	        		} catch (IOException e1) {
-	        			// TODO Auto-generated catch block
-	        			e1.printStackTrace();
-	        		}
-
-	        		try {
-	        			mSocket.leaveGroup(broadcastAddr);
-	        		} catch (IOException e) {
+	        			mSocket.send(dPacket);
+	        			Toast.makeText(getApplicationContext(), "Sent", Toast.LENGTH_LONG).show();
+	        		} 
+	        		catch (IOException e) {
 	        			// TODO Auto-generated catch block
 	        			e.printStackTrace();
 	        		}
+
+	        	    } 
+	        	    catch (UnknownHostException e1) {
+	        			// TODO Auto-generated catch block
+	        			e1.printStackTrace();
+	        	} catch (IOException e1) {
+	        		// TODO Auto-generated catch block
+	        		e1.printStackTrace();
+	        	}
+
+	        	try {
+	        		mSocket.leaveGroup(broadcastAddr);
+	        	} catch (IOException e) {
+	        		// TODO Auto-generated catch block
+	        		e.printStackTrace();
+	        	}
 	            }
 	    });   
 	}
