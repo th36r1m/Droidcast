@@ -20,6 +20,9 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
+	/*
+	** Static Variables assigned for testing. Add to shared preferences to allow in-app changes
+	*/
 	public static String BROADCAST_ADDR = "224.10.10.1";
 	public static int BROADCAST_PORT = 17012;
 	private static MulticastSocket mSocket;
